@@ -1,0 +1,1 @@
+import React from "react";import Header from "./Header.jsx";import Footer from "./Footer.jsx";export default function Layout({ children }) {  return (    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white text-slate-900">      <Header />      <main>{children}</main>      <Footer />    </div>  );}
