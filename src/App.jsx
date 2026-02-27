@@ -12,6 +12,9 @@ const NAV = [
   { id: "team", label: "Team" },
 ];
 
+// ✅ IMPORTANT: Works in localhost + GitHub Pages (base path safe)
+const asset = (fileName) => `${import.meta.env.BASE_URL}assets/${fileName}`;
+
 function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -93,7 +96,6 @@ function ImageFrame({ src, alt, caption }) {
 }
 
 function SimpleChart({ title, subtitle }) {
-  // Lightweight “fake chart” (looks professional even without a chart lib)
   const points = useMemo(() => {
     const arr = [];
     let y = 60;
@@ -129,7 +131,13 @@ function SimpleChart({ title, subtitle }) {
 
       <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
         <svg viewBox="0 0 560 180" className="h-44 w-full">
-          <path d={path} fill="none" strokeWidth="3" stroke="currentColor" className="text-blue-600" />
+          <path
+            d={path}
+            fill="none"
+            strokeWidth="3"
+            stroke="currentColor"
+            className="text-blue-600"
+          />
           <path
             d={`${path} L 548 168 L 12 168 Z`}
             fill="currentColor"
@@ -163,7 +171,9 @@ function Navbar({ active }) {
           </div>
           <div className="leading-tight">
             <div className="text-sm font-extrabold text-slate-900">AquaSmart</div>
-            <div className="text-[11px] text-slate-500">AIoT Aquaculture Framework</div>
+            <div className="text-[11px] text-slate-500">
+              AIoT Aquaculture Framework
+            </div>
           </div>
         </a>
 
@@ -278,10 +288,9 @@ export default function App() {
                 <Badge>Figure 3.1</Badge>
               </div>
 
-              {/* Put your generated figure here */}
               <div className="mt-4">
                 <ImageFrame
-                  src="/assets/figure-3-1.png"
+                  src={asset("figure-3-1.png")}
                   alt="Multi-tier system architecture"
                   caption="Figure 3.1: Multi-Tier System Architecture (Edge → Cloud → Automation)"
                 />
@@ -306,89 +315,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* PROBLEM */}
-      <Section
-        id="problem"
-        eyebrow="Context"
-        title="Why Sri Lankan Prawn Farms Need Predictive Intelligence"
-        subtitle="Traditional pond management is manual and reactive. Rapid spikes in DO, pH, and ammonia happen between checks, while disease diagnosis can take days—creating high mortality risk."
-      >
-        <div className="grid gap-5 md:grid-cols-3">
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Manual Monitoring Gaps</div>
-            <p className="mt-2 text-sm text-slate-600">
-              Once/twice daily checks create blind spots where lethal shifts occur unnoticed.
-            </p>
-          </Card>
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Delayed Disease Diagnosis</div>
-            <p className="mt-2 text-sm text-slate-600">
-              WSSV and Black Gill can spread fast; lab confirmation takes time.
-            </p>
-          </Card>
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">No Automation</div>
-            <p className="mt-2 text-sm text-slate-600">
-              Many systems only alert—AquaSmart triggers aeration/pumps to stabilize conditions.
-            </p>
-          </Card>
-        </div>
-      </Section>
-
-      {/* SOLUTION */}
-      <Section
-        id="solution"
-        eyebrow="Proposed Solution"
-        title="AquaSmart Modules"
-        subtitle="A decentralized AIoT ecosystem: edge data acquisition + cloud reasoning + real-time dashboard + closed-loop automation."
-      >
-        <div className="grid gap-5 md:grid-cols-2">
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Realtime Telemetry</div>
-            <p className="mt-2 text-sm text-slate-600">
-              6-parameter monitoring (physical + soft-sensors) streamed to dashboard in near real-time.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Badge>pH</Badge><Badge>Temperature</Badge><Badge>Turbidity</Badge>
-              <Badge>Water Level</Badge><Badge>DO (Soft)</Badge><Badge>NH₃ (Soft)</Badge>
-            </div>
-          </Card>
-
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Prediction + Diagnosis</div>
-            <p className="mt-2 text-sm text-slate-600">
-              LSTM forecasts 24-hour trends; MobileNetV2 detects Healthy / WSSV / Black Gill from images.
-            </p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                LSTM Forecasting
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                MobileNetV2 CNN
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                Risk Levels (H/M/L)
-              </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                PDF Diagnostic Reports
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 md:col-span-2">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div className="text-sm font-extrabold">Closed-Loop Automation</div>
-                <p className="mt-2 text-sm text-slate-600">
-                  Node.js evaluates risk → sends trigger command → ESP32 relay activates aerators/pumps → restores safe state.
-                </p>
-              </div>
-              <Badge>Fail-safe + Manual Override</Badge>
-            </div>
-          </Card>
-        </div>
-      </Section>
-
       {/* ARCHITECTURE */}
       <Section
         id="architecture"
@@ -398,16 +324,9 @@ export default function App() {
       >
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 3.1</div>
-                <div className="mt-1 text-xs text-slate-500">Multi-tier system architecture (with automation loop)</div>
-              </div>
-              <Badge>Core Diagram</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-3-1.png"
+                src={asset("figure-3-1.png")}
                 alt="Architecture"
                 caption="Edge → Tunnel → Dual Backend → Supabase → UI → Automation"
               />
@@ -415,16 +334,9 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 4.1</div>
-                <div className="mt-1 text-xs text-slate-500">Hardware schematic & pin mapping</div>
-              </div>
-              <Badge>Hardware</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-4-1.png"
+                src={asset("figure-4-1.png")}
                 alt="Hardware schematic"
                 caption="ESP32-CAM GPIO 32/4/12/13 → sensors + relay module"
               />
@@ -440,36 +352,11 @@ export default function App() {
         title="LSTM Forecasting + MobileNetV2 Disease Classification"
         subtitle="LSTM uses a 10-step look-back window to forecast 24-hour trends. MobileNetV2 provides lightweight, high-accuracy diagnosis suitable for real-time operations."
       >
-        <div className="grid gap-5 md:grid-cols-3">
-          <Stat
-            label="LSTM Dataset"
-            value="17,000+ points"
-            hint="Hybrid telemetry + validated historical data"
-          />
-          <Stat
-            label="24-hour Forecast"
-            value="~98% accuracy"
-            hint="High-fidelity time-series forecasting"
-          />
-          <Stat
-            label="CNN Validation"
-            value="~97.8%"
-            hint="Healthy / WSSV / Black Gill"
-          />
-        </div>
-
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 3.2</div>
-                <div className="mt-1 text-xs text-slate-500">LSTM logical structure (layers + dropout + look-back)</div>
-              </div>
-              <Badge>Model Diagram</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-3-2.png"
+                src={asset("figure-3-2.png")}
                 alt="LSTM structure"
                 caption="10-step look-back → LSTM layers → dropout → output forecast"
               />
@@ -477,16 +364,9 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 4.2</div>
-                <div className="mt-1 text-xs text-slate-500">Supabase PostgreSQL ERD (Sensor_Logs, Automation_Logs)</div>
-              </div>
-              <Badge>Database</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-4-2.png"
+                src={asset("figure-4-2.png")}
                 alt="ERD"
                 caption="High-frequency logs + diagnosis metadata + automation auditing"
               />
@@ -500,27 +380,13 @@ export default function App() {
         id="results"
         eyebrow="Evaluation"
         title="Results & Performance Summary"
-        subtitle="This section presents training performance, classification effectiveness, and end-to-end responsiveness. Replace placeholders with your actual graphs and confusion matrices when ready."
+        subtitle="Training performance and quantitative evaluation metrics."
       >
-        <div className="grid gap-5 md:grid-cols-4">
-          <Stat label="Realtime Latency" value="~750ms" hint="Edge ↔ Backend ↔ Trigger" />
-          <Stat label="UI Update" value="10 sec" hint="Supabase realtime subscriptions" />
-          <Stat label="Danger Recall" value="1.00" hint="Strong capture of critical states" />
-          <Stat label="Weighted Accuracy" value="~98%" hint="Overall classification strength" />
-        </div>
-
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.1</div>
-                <div className="mt-1 text-xs text-slate-500">Water quality training curves (Accuracy & Loss)</div>
-              </div>
-              <Badge>Training</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-1.png"
+                src={asset("figure-5-1.png")}
                 alt="Training curves"
                 caption="Google Colab training curves for LSTM forecasting"
               />
@@ -528,24 +394,14 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.2</div>
-                <div className="mt-1 text-xs text-slate-500">Water quality confusion matrix</div>
-              </div>
-              <Badge>Confusion Matrix</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-2.png"
+                src={asset("figure-5-2.png")}
                 alt="Confusion matrix"
                 caption='98% weighted accuracy & strong recall for "Danger" states'
               />
             </div>
           </Card>
-
-          <SimpleChart title="Realtime pH Trend (Demo)" subtitle="Replace with your real chart screenshot if you want." />
-          <SimpleChart title="Forecast Window (Demo)" subtitle="UI-based 24-hour predictive analytics preview." />
         </div>
       </Section>
 
@@ -554,20 +410,13 @@ export default function App() {
         id="ui"
         eyebrow="Frontend"
         title="AquaSmart Web Dashboard & Modules"
-        subtitle="React.js mobile-first dashboard using realtime subscriptions, risk classification, manual overrides, and diagnostic reporting."
+        subtitle="Real-time dashboard, forecasting UI, vision module, and reporting."
       >
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.4</div>
-                <div className="mt-1 text-xs text-slate-500">Dashboard overview (6 parameters + risk)</div>
-              </div>
-              <Badge>WebSockets</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-4.png"
+                src={asset("figure-5-4.png")}
                 alt="Dashboard"
                 caption="Realtime telemetry + risk classification (High/Medium/Low)"
               />
@@ -575,16 +424,9 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.5</div>
-                <div className="mt-1 text-xs text-slate-500">Predictive analytics interface (24-hour forecast)</div>
-              </div>
-              <Badge>Forecast</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-5.png"
+                src={asset("figure-5-5.png")}
                 alt="Predictive UI"
                 caption="Forecast charts + local biological advisories"
               />
@@ -592,16 +434,9 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.6</div>
-                <div className="mt-1 text-xs text-slate-500">Live computer vision module (ESP32-CAM)</div>
-              </div>
-              <Badge>98% Overlay</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-6.png"
+                src={asset("figure-5-6.png")}
                 alt="Vision overlay"
                 caption="Real-time detection bounding box + confidence score"
               />
@@ -609,16 +444,9 @@ export default function App() {
           </Card>
 
           <Card className="p-5">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-extrabold">Figure 5.7</div>
-                <div className="mt-1 text-xs text-slate-500">Disease control & report center</div>
-              </div>
-              <Badge>PDF Reports</Badge>
-            </div>
             <div className="mt-4">
               <ImageFrame
-                src="/assets/figure-5-7.png"
+                src={asset("figure-5-7.png")}
                 alt="Report center"
                 caption="Upload images + generate downloadable diagnostic reports"
               />
@@ -627,87 +455,11 @@ export default function App() {
         </div>
       </Section>
 
-      {/* TECH */}
-      <Section
-        id="tech"
-        eyebrow="Implementation"
-        title="Technology Stack"
-        subtitle="AquaSmart is built as a modern cloud-connected AIoT platform with real-time streaming, persistence, and efficient deep learning inference."
-      >
-        <div className="grid gap-4 md:grid-cols-4">
-          {[
-            ["ESP32-CAM", "Edge gateway & camera"],
-            ["ngrok", "Secure tunnel bridge"],
-            ["Node.js", "Orchestrator + soft sensors"],
-            ["Flask", "AI inference API"],
-            ["Supabase", "PostgreSQL + realtime"],
-            ["React", "Mobile-first dashboard"],
-            ["LSTM", "24-hour forecasting"],
-            ["MobileNetV2", "Disease classification"],
-          ].map(([name, desc]) => (
-            <Card key={name} className="p-5">
-              <div className="text-sm font-extrabold">{name}</div>
-              <div className="mt-2 text-sm text-slate-600">{desc}</div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      {/* TEAM */}
-      <Section
-        id="team"
-        eyebrow="People"
-        title="Team & Supervision"
-        subtitle="Developed as a final year research project at the Department of ICT, Faculty of Technology, University of Sri Jayewardenepura."
-      >
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Group Members</div>
-            <ul className="mt-3 space-y-2 text-sm text-slate-600">
-              <li>Kuruwita K.A.H.R (ICT/21/877)</li>
-              <li>Lakshan G.N.R (ICT/21/880)</li>
-              <li>Senevirathne D.M.S.N (ICT/21/919)</li>
-            </ul>
-          </Card>
-
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Supervisor</div>
-            <p className="mt-3 text-sm text-slate-600">
-              Dr. P.L.M. Prabhani <br />
-              Senior Lecturer, Faculty of Technology
-            </p>
-          </Card>
-
-          <Card className="p-5">
-            <div className="text-sm font-extrabold">Project Links</div>
-            <p className="mt-3 text-sm text-slate-600">
-              Add your GitHub repo + demo URL here.
-            </p>
-            <div className="mt-4 flex flex-col gap-2">
-              <a className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-black" href="#">
-                GitHub Repository
-              </a>
-              <a className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-800 hover:bg-slate-50" href="#">
-                Live Demo / Video
-              </a>
-            </div>
-          </Card>
-        </div>
-      </Section>
-
       {/* FOOTER */}
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto w-full max-w-6xl px-4 py-10 md:px-6">
-          <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <div>
-              <div className="text-sm font-extrabold text-slate-900">AquaSmart</div>
-              <div className="mt-1 text-xs text-slate-500">
-                AIoT • Forecasting • Disease Diagnosis • Closed-loop Automation
-              </div>
-            </div>
-            <div className="text-xs text-slate-500">
-              © {new Date().getFullYear()} Group 16 • University of Sri Jayewardenepura
-            </div>
+          <div className="text-xs text-slate-500">
+            © {new Date().getFullYear()} Group 16 • University of Sri Jayewardenepura
           </div>
         </div>
       </footer>
